@@ -53,7 +53,6 @@ public class NonceRESTHelper implements java.io.Serializable
      */
     public NoncePass validateNonce(NoncePass inNoncePass)
     {
-
         NoncePass outNoncePass = new NoncePass();
         outNoncePass.setSuccess(false);
         Nonce nonce = nonceService.getNonceByIdUserName(inNoncePass.getNonce(), inNoncePass.getUserName());
@@ -74,7 +73,7 @@ public class NonceRESTHelper implements java.io.Serializable
         }
         catch(Exception e)
         {
-            //outNoncePass.setSuccess(false);
+            log.error("error validating nonce.", e);
             return outNoncePass;
         }
         finally

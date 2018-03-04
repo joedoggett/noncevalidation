@@ -1,6 +1,8 @@
 package com.joe.noncevalidation.NonceValidation.rest;
 
 import com.joe.noncevalidation.NonceValidation.model.NoncePass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -28,14 +30,16 @@ public class NonceController
     @Autowired
     NonceRESTHelper nonceHelper;
 
+    private Logger log = LoggerFactory.getLogger(this.getClass());
+
 
 
     @RequestMapping(path = "/insert", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<?> insertNonce(@RequestBody NoncePass noncePass)
     {
-        //NonceValidation nonceValidation = nonceHelper.insertNonce(noncePass.getNonce());
         if(!noncePass.getPassPhrase().equals(INSERT_NONCE_PASS_PHRASE))
         {
+            log.info("insert nonce pass does not equal.");
             return ResponseEntity.ok().body("");
         }
         try
@@ -44,6 +48,7 @@ public class NonceController
         }
         catch(Exception e)
         {
+            log.error("error inserting nonce.", e);
             return ResponseEntity.badRequest().body("");
         }
     }
@@ -51,8 +56,10 @@ public class NonceController
     @RequestMapping(path = "/validate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public ResponseEntity<?> validateNonce(@RequestBody NoncePass noncePass)
     {
+
         if(!noncePass.getPassPhrase().equals(VALIDATE_NONCE_PASS_PHRASE))
         {
+            log.info("nonce pass does not equal.");
             return ResponseEntity.ok().body("");
         }
         try
@@ -61,6 +68,7 @@ public class NonceController
         }
         catch(Exception e)
         {
+            log.error("error validating nonce.", e);
             return ResponseEntity.badRequest().body("");
         }
     }
